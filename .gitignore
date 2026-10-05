@@ -1,5 +1,6 @@
 # 构建产物（成品 jar 走 GitHub Release，不进仓库树）
-target/       # compile-check.bat 的输出目录
+# 注意：.gitignore 不支持行尾注释，注释必须独占一行
+target/
 out/
 build/
 *.class
