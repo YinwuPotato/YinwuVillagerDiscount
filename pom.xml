@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.yinwu</groupId>
+        <artifactId>YinwuPlugins</artifactId>
+        <version>1.0.1</version>
+        <relativePath>parent/pom.xml</relativePath>
+    </parent>
+
+    <groupId>org.yinwu</groupId>
+    <artifactId>YinwuVillagerDiscount</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>YinwuVillagerDiscount</name>
+    <description>共享村民折扣：任何人治愈僵尸村民后，全服玩家都享受那份折扣（移植 totos-carpet-tweaks 的 sharedVillagerDiscounts，Folia 兼容）</description>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>${project.name}-${project.version}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.yinwu</groupId>
+            <artifactId>YinwuPluginLib</artifactId>
+            <version>${yinwu-lib.version}</version>
+        </dependency>
+    </dependencies>
+</project>

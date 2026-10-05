@@ -1,0 +1,16 @@
+# 构建产物（成品 jar 走 GitHub Release，不进仓库树）
+target/       # compile-check.bat 的输出目录
+out/
+build/
+*.class
+*.jar
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

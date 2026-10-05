@@ -1,0 +1,56 @@
+# ============================================================
+# YinwuVillagerDiscount 配置
+#   共享村民折扣：任何人治愈僵尸村民后，全服玩家都享受那份折扣
+#   移植自 totos-carpet-tweaks 的 sharedVillagerDiscounts
+# 改完执行 /yvd reload 即时生效，无需重启
+# ============================================================
+
+# 总开关
+enabled: true
+
+# 调试日志（基类 YinwuPlugin 读取；开启后 debug() 才输出）
+debug: false
+
+share:
+  # 共享值上限，按"有效声望"口径（原版 MAJOR_POSITIVE 原始值上限 20 × 权重 5 = 100）。
+  # 代码会自己换算成原始值上限（100 / 5 = 20）再写入，不会超模。
+  max-value: 100
+
+  # ★ 是否连 MINOR_POSITIVE 也一起共享（默认开，建议保持开）
+  #   原版治愈其实会写入【两种】传言（见 Villager#onReputationEventFrom）：
+  #     MAJOR_POSITIVE +20（权重 5 → 有效 100）
+  #     MINOR_POSITIVE +25（权重 1 → 有效  25）
+  #   原 mod 只共享前者 —— 实测结果就是"治愈者 4 绿宝石、被共享者 9 绿宝石"，价格并不一致。
+  #   true  = 两种都共享，被共享者与治愈者价格完全一致（比原 mod 更强，推荐）
+  #   false = 只共享 MAJOR_POSITIVE（严格等同原 mod 行为）
+  share-minor-positive: true
+
+  # 玩家右键村民（打开交易界面前）时补写：让后来进服的玩家也拿到折扣
+  apply-on-interact: true
+
+  # 交易真正发生时再兜底补写一次（有些情况不会触发右键事件）
+  apply-on-trade: true
+
+  # 只共享"治愈类声望"（MAJOR_POSITIVE）—— 这是固定行为，与原 mod 一致，不提供开关。
+  # 其它声望（交易累积 MINOR_POSITIVE、负面传言）一律不共享，避免把负面声望也扩散出去。
+
+  # 治愈者是否收到一条提示（告诉他折扣已共享给全服）
+  notify-curer: true
+
+  # 治愈后延迟多少 tick 再读取/写入声望
+  # 原版是"转化完成时"才写入 gossip，事件可能早于它，所以必须延迟一下
+  apply-delay-ticks: 2
+
+data:
+  # 多久把 data.yml 落盘一次（秒）；有变更时才会写
+  save-interval-seconds: 300
+  # 超过该天数没再出现的村民记录会被清理（0 = 不清理）
+  purge-after-days: 30
+
+messages:
+  prefix: "&8[&eVillagerDiscount&8] &r"
+  no-permission: "&c你没有权限。"
+  reloaded: "&a配置已重载。"
+  curer-notify: "&a你治愈的这只村民的折扣已共享给全服玩家。"
+  info-header: "&eYinwuVillagerDiscount &7状态"
+  purged: "&a已清理 &f%count% &a条过期记录。"

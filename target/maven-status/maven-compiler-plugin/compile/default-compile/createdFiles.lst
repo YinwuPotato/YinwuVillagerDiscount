@@ -1,0 +1,8 @@
+org\yinwu\villagerdiscount\command\DiscountCommand.class
+org\yinwu\villagerdiscount\data\SharedDiscountStore$Entry.class
+org\yinwu\villagerdiscount\YinwuVillagerDiscountPlugin.class
+org\yinwu\villagerdiscount\command\DiscountCommand$1.class
+org\yinwu\villagerdiscount\data\SharedDiscountStore.class
+org\yinwu\villagerdiscount\discount\DiscountManager.class
+org\yinwu\villagerdiscount\config\VillagerDiscountConfig.class
+org\yinwu\villagerdiscount\listener\CureListener.class

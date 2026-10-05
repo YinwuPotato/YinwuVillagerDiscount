@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  YinwuPlugins —— Yinwu 插件集父 POM
+
+  为什么需要它：所有 Yinwu 插件的子 POM 都继承本 POM。
+  子 POM 里 <dependency> 不写 <version> 与 <scope>（由下面 dependencyManagement 提供），
+  构建插件也不写 <version>（由下面 pluginManagement 提供）—— 缺了本文件任何模块都构建不了。
+
+  用法（在每个插件仓库根目录）：
+      mvn clean package
+
+  插件之间的依赖顺序：YinwuPluginLib 必须最先构建并安装到本地仓库：
+      cd YinwuPluginLib && mvn clean install
+      然后其它插件才能 mvn clean package
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.yinwu</groupId>
+    <artifactId>YinwuPlugins</artifactId>
+    <version>1.0.1</version>
+    <packaging>pom</packaging>
+
+    <name>YinwuPlugins</name>
+    <description>Yinwu 插件集父 POM：统一的 Paper API 版本、共享库版本与构建插件配置</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!-- 运行时目标：Paper 1.21.8（Folia 兼容） -->
+        <paper-api.version>1.21.8-R0.1-SNAPSHOT</paper-api.version>
+        <!-- 共享库版本，与 YinwuPluginLib 的 <version> 保持一致 -->
+        <yinwu-lib.version>1.0.3</yinwu-lib.version>
+
+        <!-- 构建插件版本 -->
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+        <maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>lumine</id>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Paper API：编译期提供，不打进产物 -->
+            <dependency>
+                <groupId>io.papermc.paper</groupId>
+                <artifactId>paper-api</artifactId>
+                <version>${paper-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Yinwu 共享库：默认打进产物，服务器上无需单独安装 -->
+            <dependency>
+                <groupId>net.yinwu</groupId>
+                <artifactId>YinwuPluginLib</artifactId>
+                <version>${yinwu-lib.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <release>${maven.compiler.release}</release>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!--
+                  shade 默认配置：所有模块共享。
+                  不生成 dependency-reduced-pom.xml（那是构建垃圾，已写进 .gitignore）。
+                  需要 minimizeJar / 自定义 filter 的模块在自己的 <build><plugins> 里覆盖。
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade-plugin.version}</version>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/MANIFEST.MF</exclude>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                    <exclude>module-info.class</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
