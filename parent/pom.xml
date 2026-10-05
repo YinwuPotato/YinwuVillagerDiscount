@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   YinwuPlugins —— Yinwu 插件集父 POM
 
@@ -117,13 +117,22 @@
 
                 <!--
                   shade 默认配置：所有模块共享。
-                  不生成 dependency-reduced-pom.xml（那是构建垃圾，已写进 .gitignore）。
+                  ⚠️ <executions> 必须留在这里：子 POM 只写了 <artifactId>，不会自己绑定 shade 目标。
+                  没有它就不会打库进 jar —— 产物会缺 net.yinwu.lib.* ，运行时 NoClassDefFoundError。
                   需要 minimizeJar / 自定义 filter 的模块在自己的 <build><plugins> 里覆盖。
                 -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>${maven-shade-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
                         <filters>

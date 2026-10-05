@@ -1,5 +1,7 @@
 # YinwuVillagerDiscount — 共享村民折扣
 
+**最新版本：v1.0.0** | [下载 Release](https://github.com/YinwuPotato/YinwuVillagerDiscount/releases/tag/v1.0.0)
+
 **任何人治愈一只僵尸村民后，那份折扣对全服玩家生效** —— 不需要每个人都去治愈一遍。
 
 > 移植自 Fabric mod [totos-carpet-tweaks](https://github.com/totorewa/totos-carpet-tweaks) 的
@@ -246,6 +248,12 @@ build-javac.bat
 但本模块的正式构建路径是 `build-javac.bat`。
 
 **依赖**：`YinwuPluginLib`（**已打进 jar**，服务器上不需要单独安装）、Paper API 1.21+。**无任何软依赖。**
+
+---
+
+## License | 许可证
+
+LGPL-3.0 —— 见 [LICENSE](LICENSE)。移植自 [totorewa/totos-carpet-tweaks](https://github.com/totorewa/totos-carpet-tweaks) 的 `sharedVillagerDiscounts` 规则（同为 LGPL-3.0）。
 
 ---
 
